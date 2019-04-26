@@ -39,6 +39,7 @@ class Car:
         rot_img = pygame.transform.rotate(self.image, -degrees)
         self.rect = rot_img.get_rect(center=(self.x, self.y))
         surface.blit(rot_img, self.rect)
+        pygame.draw.rect(self.surface, (255, 0, 0),self.rect,2)
         #print(self.rect)
 
     def updatePosition(self, event):
@@ -78,12 +79,11 @@ class Car:
             self.acc -= 1
         if self.brake and self.acc != 0:
             if self.acc > 0.15:
-                self.acc -=0.15
+                self.acc -= 0.15
             elif self.acc < -0.15:
-                self.acc +=0.15
-            elif self.acc < 0.15 and self.acc > -0.15 :
+                self.acc += 0.15
+            elif -0.15 < self.acc < 0.15:
                 self.acc = 0
-
 
         if self.acc < -3:
             self.acc = -3
