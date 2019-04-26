@@ -19,8 +19,16 @@ class Car:
 
     def showCar(self, surface):
         self.move()
-        pygame.transform.rotate(surface, self.angle)
-        surface.blit(self.image, (self.x, self.y))
+
+        degrees = math.degrees(self.angle)
+        rot_img = pygame.transform.rotate(self.image, -degrees)
+        rect = rot_img.get_rect(center=(self.x, self.y))
+
+        #surface.fill((128, 128, 128))
+        surface.blit(rot_img, rect)
+
+        #self.image = pygame.transform.rotate(self.image, self.angle)
+        #surface.blit(self.image, (self.x, self.y))
 
     def updatePosition(self, event):
         if event.type == pygame.KEYDOWN:
@@ -49,10 +57,13 @@ class Car:
         if self.forward : self.acc += 1
         if self.backward : self.acc -= 1
 
+        if self.acc <-1 : self.acc = -1
+        if self.acc > 1 : self.acc = 1
+
         self.showCar(self.surface)
 
     def move(self):
-        self.vel[0]=self.acc * math.cos(self.angle)
-        self.vel[1] = self.acc * math.sin(self.angle)
+        self.vel[0]=self.acc * math.sin(self.angle)
+        self.vel[1] = self.acc * math.cos(self.angle)
         self.x +=self.vel[1]
         self.y +=self.vel[0]
