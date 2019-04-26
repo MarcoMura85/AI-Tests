@@ -55,7 +55,7 @@ class Car:
         if self.rotatePos: self.angle -= 0.1
         if self.rotateNeg: self.angle += 0.1
         if self.forward : self.acc += 1
-        if self.backward : self.acc -= 1
+        if self.backward : self.acc = 0
 
         if self.acc <-1 : self.acc = -1
         if self.acc > 1 : self.acc = 1
@@ -65,5 +65,5 @@ class Car:
     def move(self):
         self.vel[0]=self.acc * math.sin(self.angle)
         self.vel[1] = self.acc * math.cos(self.angle)
-        self.x +=self.vel[1]
-        self.y +=self.vel[0]
+        self.x +=self.vel[0]
+        self.y -=self.vel[1]
