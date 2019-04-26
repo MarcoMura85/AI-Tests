@@ -24,7 +24,7 @@ def displayCar (x,y):
     screen.blit(car_img, (x, y))
 
 
-car2 = carClass.Car(100,100,"01_image.png")
+car2 = carClass.Car(100,100,"01_image.png", screen)
 car2.showCar(screen)
 
 def game_loop():
@@ -103,6 +103,7 @@ def game_loop():
         screen.fill((128, 128, 128))
         # now blit the smily on screen
         displayCar(xpos, ypos)
+        car2.updatePosition(event)
         car2.showCar(screen)
 
         # and update the screen (dont forget that!)
