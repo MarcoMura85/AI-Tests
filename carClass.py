@@ -17,6 +17,11 @@ class Car:
         self.rotateNeg = False
         self.surface = surface
 
+    def setPos (self, x, y, angle):
+        self.x = x
+        self.y = y
+        self.angle = angle
+
     def showCar(self, surface):
         self.move()
 
