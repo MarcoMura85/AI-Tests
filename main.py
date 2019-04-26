@@ -4,7 +4,6 @@ import pygame
 # initialize the pygame module
 pygame.init()
 # load and set the logo
-
 pygame.display.set_caption("Test Race")
 
 screen_width = 800
@@ -14,9 +13,12 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 # a clock for controlling the fps later
 clock = pygame.time.Clock()
 
-image = pygame.image.load("01_image.png")
+car = pygame.image.load("01_image.png")
 
-image.set_colorkey((255, 0, 255))
+car.set_colorkey((255, 0, 255))
+
+def displayCar (x,y):
+    screen.blit(car, (xpos, ypos))
 
 bgd_image = pygame.image.load("background.png")
 
@@ -31,7 +33,7 @@ step_x = 10
 step_y = 10
 
 # and blit it on screen
-screen.blit(image, (xpos, ypos))
+displayCar(xpos,ypos)
 
 # update the screen to make the changes visible (fullscreen update)
 pygame.display.flip()
@@ -62,7 +64,7 @@ while running:
 
     screen.blit(bgd_image, (0, 0))
     # now blit the smily on screen
-    screen.blit(image, (xpos, ypos))
+    displayCar(xpos,ypos)
     # and update the screen (dont forget that!)
     pygame.display.update()
 
