@@ -16,6 +16,13 @@ class Car:
         self.rotatePos = False
         self.rotateNeg = False
         self.surface = surface
+        self.scaleCar(0.3)
+
+    def scaleCar(self, ratio):
+        width = round (self.size[0] * ratio)
+        height = round(self.size[1] * ratio)
+        self.image = pygame.transform.scale(self.image, (width, height))
+        self.size = self.image.get_rect().size
 
     def setPos (self, x, y, angle):
         self.x = x
@@ -28,12 +35,7 @@ class Car:
         degrees = math.degrees(self.angle)
         rot_img = pygame.transform.rotate(self.image, -degrees)
         rect = rot_img.get_rect(center=(self.x, self.y))
-
-        #surface.fill((128, 128, 128))
         surface.blit(rot_img, rect)
-
-        #self.image = pygame.transform.rotate(self.image, self.angle)
-        #surface.blit(self.image, (self.x, self.y))
 
     def updatePosition(self, event):
         if event.type == pygame.KEYDOWN:
@@ -59,11 +61,13 @@ class Car:
         # update the position of the car
         if self.rotatePos: self.angle -= 0.1
         if self.rotateNeg: self.angle += 0.1
-        if self.forward : self.acc += 1
-        if self.backward : self.acc = 0
+        if self.forward: self.acc += 1
+        if self.backward: self.acc -= 1
 
-        if self.acc <-1 : self.acc = -1
-        if self.acc > 1 : self.acc = 1
+        if self.acc < -1:
+            self.acc = -1
+        if self.acc > 3:
+            self.acc = 3
 
         self.showCar(self.surface)
 
