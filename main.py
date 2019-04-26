@@ -1,4 +1,5 @@
 import pygame
+import carClass
 
 
 # initialize the pygame module
@@ -21,6 +22,10 @@ car_img.set_colorkey((255, 0, 255))
 
 def displayCar (x,y):
     screen.blit(car_img, (x, y))
+
+
+car2 = carClass.Car(100,100,"01_image.png")
+car2.showCar(screen)
 
 def game_loop():
     # define the position of the smily
@@ -51,10 +56,9 @@ def game_loop():
         # event handling, gets all event from the event queue
         for event in pygame.event.get():
             # only do something if the event is of type QUIT
-            if event.type == pygame.QUIT:
-                # change the value to False, to exit the main loop
-                running = False
-            # check for keypress and check if it was Esc
+            if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
+                pygame.quit()
+
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
                     left = True
@@ -64,9 +68,6 @@ def game_loop():
                     up = True
                 if event.key == pygame.K_DOWN:
                     down = True
-
-                if event.key == pygame.K_ESCAPE:
-                    pygame.quit()
 
             if event.type == pygame.KEYUP:
                 if event.key == pygame.K_LEFT:
@@ -102,6 +103,8 @@ def game_loop():
         screen.fill((128, 128, 128))
         # now blit the smily on screen
         displayCar(xpos, ypos)
+        car2.showCar(screen)
+
         # and update the screen (dont forget that!)
         pygame.display.flip()
         clock.tick(60)
