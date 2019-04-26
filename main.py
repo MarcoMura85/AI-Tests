@@ -26,14 +26,14 @@ bgd_image = pygame.image.load("background.png")
 screen.blit(bgd_image, (0, 0))  # first background
 
 # define the position of the smily
-xpos = 50
-ypos = 50
+xpos = screen_width/2
+ypos = screen_height/2
 # how many pixels we move our smily each frame
 step_x = 10
 step_y = 10
 
 # and blit it on screen
-displayCar(xpos,ypos)
+displayCar(xpos, ypos)
 
 # update the screen to make the changes visible (fullscreen update)
 pygame.display.flip()
@@ -43,6 +43,9 @@ running = True
 
 # main loop
 while running:
+
+    delta_x = 0
+
     # event handling, gets all event from the event queue
     for event in pygame.event.get():
         # only do something if the event is of type QUIT
@@ -50,17 +53,22 @@ while running:
             # change the value to False, to exit the main loop
             running = False
         # check for keypress and check if it was Esc
-        if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-            running = False
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                delta_x = -step_x
+            if event.key == pygame.K_RIGHT:
+                delta_x = step_y
+      #  if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
+      #      running = False
 
     # check if the smily is still on screen, if not change direction
-    if xpos > screen_width - 64 or xpos < 0:
-        step_x = -step_x
-    if ypos > screen_height - 64 or ypos < 0:
-        step_y = -step_y
+    # if xpos > screen_width - 64 or xpos < 0:
+    #     step_x = -step_x
+    # if ypos > screen_height - 64 or ypos < 0:
+    #     step_y = -step_y
     # update the position of the smily
-    xpos += step_x  # move it to the right
-    ypos += step_y  # move it down
+    xpos += delta_x  # move it to the right
+    #ypos += step_y  # move it down
 
     #screen.blit(bgd_image, (0, 0))
     screen.fill((128, 128, 128))
