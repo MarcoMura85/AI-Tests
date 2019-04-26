@@ -62,9 +62,10 @@ while running:
     xpos += step_x  # move it to the right
     ypos += step_y  # move it down
 
-    screen.blit(bgd_image, (0, 0))
+    #screen.blit(bgd_image, (0, 0))
+    screen.fill((128, 128, 128))
     # now blit the smily on screen
-    displayCar(xpos,ypos)
+    displayCar(xpos, ypos)
     # and update the screen (dont forget that!)
     pygame.display.update()
 
