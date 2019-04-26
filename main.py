@@ -40,6 +40,11 @@ pygame.display.flip()
 
 # define a variable to control the main loop
 running = True
+left = False
+right = False
+
+up = False
+down = False
 
 # main loop
 while running:
@@ -55,29 +60,39 @@ while running:
         # check for keypress and check if it was Esc
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
-                delta_x = -step_x
+                left = True
             if event.key == pygame.K_RIGHT:
-                delta_x = step_y
-      #  if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-      #      running = False
+                right = True
+            if event.key == pygame.K_UP:
+                up = True
+            if event.key == pygame.K_DOWN:
+                down = True
 
-    # check if the smily is still on screen, if not change direction
-    # if xpos > screen_width - 64 or xpos < 0:
-    #     step_x = -step_x
-    # if ypos > screen_height - 64 or ypos < 0:
-    #     step_y = -step_y
+            if event.key == pygame.K_ESCAPE:
+                pygame.quit()
+
+
+        if event.type == pygame.KEYUP:
+            if event.key == pygame.K_LEFT:
+                left = False
+            if event.key == pygame.K_RIGHT:
+                right = False
+            if event.key == pygame.K_UP:
+                up = False
+            if event.key == pygame.K_DOWN:
+                down = False
+
     # update the position of the smily
-    xpos += delta_x  # move it to the right
-    #ypos += step_y  # move it down
+    if left: xpos -= step_x
+    if right: xpos += step_x
+    if up: ypos -= step_y
+    if down: ypos += step_y
 
-    #screen.blit(bgd_image, (0, 0))
     screen.fill((128, 128, 128))
     # now blit the smily on screen
     displayCar(xpos, ypos)
     # and update the screen (dont forget that!)
-    pygame.display.update()
-
-    # this will slow it down to xx fps, so you can watch it,
-    # otherwise it would run too fast
+    pygame.display.flip()
     clock.tick(60)
+
 pygame.quit()
