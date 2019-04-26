@@ -43,7 +43,8 @@ def game_loop():
         for event in pygame.event.get():
             # only do something if the event is of type QUIT
             if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
-                pygame.quit()
+                #pygame.quit()
+                running = False
 
         #     if event.type == pygame.KEYDOWN:
         #         if event.key == pygame.K_LEFT:
