@@ -1,4 +1,5 @@
 import pygame
+import rectClass
 import math
 
 class Car:
@@ -10,8 +11,12 @@ class Car:
         self.vel = [0, 0]
         self.acc = 0
         self.image = pygame.image.load(image)
+
         self.size = self.image.get_rect().size
         self.rect = self.image.get_rect()
+
+        self.myRect22 = rectClass.myRect(surface, self.rect, self.angle)
+
         self.forward = False
         self.backward = False
         self.rotatePos = False
@@ -26,11 +31,13 @@ class Car:
         self.image = pygame.transform.scale(self.image, (width, height))
         self.size = self.image.get_rect().size
         self.rect = self.image.get_rect()
+        self.myRect22.updateRect(self.rect)
 
     def setPos (self, x, y, angle):
         self.x = x
         self.y = y
         self.angle = angle
+        self.myRect22.updatePos(x,y,angle)
 
     def showCar(self, surface):
         self.move()
@@ -39,7 +46,9 @@ class Car:
         rot_img = pygame.transform.rotate(self.image, -degrees)
         self.rect = rot_img.get_rect(center=(self.x, self.y))
         surface.blit(rot_img, self.rect)
-        pygame.draw.rect(self.surface, (255, 0, 0),self.rect,2)
+        self.myRect22.drawMyRect()
+        #pygame.draw.rect(self.surface, (255, 0, 0),self.rect,2)
+
         #print(self.rect)
 
     def updatePosition(self, event):
@@ -97,3 +106,4 @@ class Car:
         self.vel[1] = self.acc * (math.cos(self.angle))
         self.x += self.vel[0]
         self.y -= self.vel[1]
+        self.myRect22.updatePos(self.x, self.y, self.angle)
