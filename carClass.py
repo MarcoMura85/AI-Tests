@@ -5,6 +5,13 @@ import math
 class Car:
 
     def __init__(self, x, y, image, surface):
+
+        self.maxAcc = 1
+        self.zeroAcc = 0.15
+        self.angleStep = 0.15
+        self.brakeStep = 0.15
+        self.accStep = 1
+
         self.x = x
         self.y = y
         self.angle = 0
@@ -37,7 +44,7 @@ class Car:
         self.x = x
         self.y = y
         self.angle = angle
-        self.myRect22.updatePos(x,y,angle)
+        self.myRect22.updatePos(x, y, angle)
 
     def showCar(self, surface):
         self.move()
@@ -79,25 +86,25 @@ class Car:
 
         # update the position of the car
         if self.rotatePos:
-            self.angle -= 0.15
+            self.angle -= self.angleStep
         if self.rotateNeg:
-            self.angle += 0.15
+            self.angle += self.angleStep
         if self.forward:
-            self.acc += 1
+            self.acc += self.accStep
         if self.backward:
-            self.acc -= 1
+            self.acc -= self.accStep
         if self.brake and self.acc != 0:
-            if self.acc > 0.15:
-                self.acc -= 0.15
-            elif self.acc < -0.15:
-                self.acc += 0.15
-            elif -0.15 < self.acc < 0.15:
+            if self.acc > self.zeroAcc:
+                self.acc -= self.brakeStep
+            elif self.acc < -self.zeroAcc:
+                self.acc += self.brakeStep
+            elif -self.zeroAcc < self.acc < self.zeroAcc:
                 self.acc = 0
 
-        if self.acc < -3:
-            self.acc = -3
-        if self.acc > 3:
-            self.acc = 3
+        if self.acc < -self.maxAcc:
+            self.acc = -self.maxAcc
+        if self.acc > self.maxAcc:
+            self.acc = self.maxAcc
 
         self.showCar(self.surface)
 
