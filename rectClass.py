@@ -30,23 +30,23 @@ class myRect(pygame.Surface):
         self.ypos = ypos - self.height/2
         self.angle = angle
 
-        #angle = 65.
-        theta = (self.angle)
-
-        rotMatrix = numpy.array([[numpy.cos(theta), -numpy.sin(theta)],
-                                 [numpy.sin(theta), numpy.cos(theta)]])
-
-
         self.P0 = (self.xpos, self.ypos)
         self.P1 = (self.xpos, self.ypos + self.height)
         self.P2 = (self.xpos + self.width, self.ypos + self.height)
         self.P3 = (self.xpos + self.width, self.ypos)
 
-#        self.P0 = numpy.dot(rotMatrix, self.P0)
+        self.P0 = self.rotatePoint((xpos, ypos), self.P0, angle)
+        self.P1 = self.rotatePoint((xpos, ypos), self.P1, angle)
+        self.P2 = self.rotatePoint((xpos, ypos), self.P2, angle)
+        self.P3 = self.rotatePoint((xpos, ypos), self.P3, angle)
 
-        qx = xpos + math.cos(theta) * (self.P0[0] - xpos) - math.sin(theta) * (self.P0[1] - ypos)
-        qy = ypos + math.sin(theta) * (self.P0[0] - xpos) + math.cos(theta) * (self.P0[1] - ypos)
-        self.P0 = (qx, qy)
+    def rotatePoint(self, origin, point, angle):
+        ox, oy = origin
+        px, py = point
+
+        qx = ox + math.cos(angle) * (px - ox) - math.sin(angle) * (py - oy)
+        qy = oy + math.sin(angle) * (px - ox) + math.cos(angle) * (py - oy)
+        return (qx, qy)
 
     def drawMyRect(self):
         pygame.draw.line(self.surface, (0, 0, 255), self.P0, self.P1)

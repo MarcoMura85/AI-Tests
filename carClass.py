@@ -30,7 +30,7 @@ class Car:
         self.rotateNeg = False
         self.brake = False
         self.surface = surface
-        self.scaleCar(0.3)
+        self.scaleCar(0.5)
 
     def scaleCar(self, ratio):
         width = round (self.size[0] * ratio)
