@@ -40,17 +40,14 @@ def game_loop():
         screen.fill((128, 128, 128))
 
         p1 = (200, 200)
-        p2 = (300, 500)
-        pygame.draw.line(screen, (255, 0, 0), p1, p2)
-
+        p2 = (300, 400)
+        pygame.draw.line(screen, (0, 255, 0), p1, p2)
 
         car.updatePosition(event)
 
         carVertices = car.getCarVertices()
 
-        collision = collisionClass.intersect(carVertices[0],carVertices[3], p1, p2)
-
-        print (collision)
+        collision = collisionClass.doIntersect(carVertices[0], carVertices[3], p1, p2)
 
         car.showCar(screen, collision)
 

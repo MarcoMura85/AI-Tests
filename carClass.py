@@ -56,7 +56,7 @@ class Car:
         rot_img = pygame.transform.rotate(self.image, -degrees)
         self.rect = rot_img.get_rect(center=(self.x, self.y))
         surface.blit(rot_img, self.rect)
-        self.myRect.drawMyRect()
+        self.myRect.drawMyRect(collision)
 
     def updatePosition(self, event):
 
