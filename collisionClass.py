@@ -1,4 +1,13 @@
 
+# Given three colinear points p, q, r, the function checks if
+# point q lies on line segment 'pr'
+def onSegment( p,  q,  r):
+	if (q[0] <= max(p[0], r[0]) and q[0] >= min(p[0], r[0]) and
+		q[1] <= max(p[1], r[1]) and q[1] >= min(p[1], r[1])) :
+		return True
+
+	return False
+
 # To find orientation of ordered triplet (p, q, r).
 # The function returns following values
 # 0 --> p, q and r are colinear
