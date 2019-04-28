@@ -12,7 +12,7 @@ class Car:
         self.angleStep = 0.15
         self.brakeStep = 0.15
         self.accStep = 1
-        self.scaleFactor = 0.5
+        self.scaleFactor = 0.3
 
         self.x = x
         self.y = y
