@@ -7,7 +7,7 @@ class Car:
 
     def __init__(self, x, y, image, surface):
 
-        self.maxAcc = 1
+        self.maxAcc = 3
         self.zeroAcc = 0.15
         self.angleStep = 0.15
         self.brakeStep = 0.15

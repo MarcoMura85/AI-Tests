@@ -29,7 +29,7 @@ def orientation(p, q, r):
 
 # The main function that returns True if line segment 'p1q1'
 # and 'p2q2' intersect.
-def doIntersect(p1, q1, p2, q2):
+def doSegmentIntersect(p1, q1, p2, q2):
 	# Find the four orientations needed for general and
 	# special cases
 	o1 = orientation(p1, q1, p2)
@@ -55,5 +55,24 @@ def doIntersect(p1, q1, p2, q2):
 	if o4 == 0 and onSegment(p2, q1, q2): return True
 
 	return False  # Doesn't fall in any of the above cases
+
+
+def doPolygonIntersect(poly1, poly2):
+	for i in range(len(poly1)):
+		P1 = poly1[i]
+		if i == (len(poly1)-1):
+			P2 = poly1[0]
+		else:
+			P2 = poly1[i + 1]
+
+		for j in range(len(poly2)):
+			P3= poly2[j]
+			if j == (len(poly2)-1):
+				P4 = poly2[0]
+			else:
+				P4 = poly2[j + 1]
+			if doSegmentIntersect(P1, P2, P3, P4):
+				return True
+	return False
 
 

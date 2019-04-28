@@ -56,7 +56,4 @@ class MyRect(pygame.Surface):
         if collision:
             color = (255, 0, 0)
 
-        pygame.draw.line(self.surface, color, self.vertices[0], self.vertices[1])
-        pygame.draw.line(self.surface, color, self.vertices[1], self.vertices[2])
-        pygame.draw.line(self.surface, color, self.vertices[2], self.vertices[3])
-        pygame.draw.line(self.surface, color, self.vertices[3], self.vertices[0])
+        pygame.draw.polygon(self.surface, color, self.vertices, 1)

@@ -17,6 +17,15 @@ clock = pygame.time.Clock()
 
 car = carClass.Car(100, 100, "car.png", screen)
 car.showCar(screen)
+point_list=[]
+outer = []
+inner = []
+
+def draw_circuit( point_list, event):
+    if event.type == pygame.MOUSEBUTTONDOWN:
+        if not pygame.mouse.get_pos() in point_list:
+            point_list.append(pygame.mouse.get_pos())
+
 
 def game_loop():
     xpos = screen_width/2
@@ -29,6 +38,15 @@ def game_loop():
     # define a variable to control the main loop
     running = True
 
+    with open("outerCircuit.txt", "r") as f:
+       for line in f:
+            outer =[tuple(map(int, i.split(','))) for i in f]
+    with open("innerCircuit.txt", "r") as f:
+        for line in f:
+            inner = [tuple(map(int, i.split(','))) for i in f]
+
+    circuit = inner + outer
+
     # main loop
     while running:
         # event handling, gets all event from the event queue
@@ -36,18 +54,25 @@ def game_loop():
             # only do something if the event is of type QUIT
             if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
                 running = False
+            # if event.type == pygame.KEYDOWN and event.key == pygame.K_s:
+            #     with open("outerCircuit.txt", "w") as f:
+            #         f.write('\n'.join('%s , %s' % x for x in point_list))
+
 
         screen.fill((128, 128, 128))
 
-        p1 = (200, 200)
-        p2 = (300, 400)
-        pygame.draw.line(screen, (0, 255, 0), p1, p2)
+        pygame.draw.polygon(screen, (200, 200, 200), outer, 0)
+        pygame.draw.polygon(screen, (128, 128, 128), inner, 0)
+
+        draw_circuit(point_list, event)
+
+        if len(point_list) > 1:
+            pygame.draw.lines(screen, (255, 0, 0), False, point_list, 1)
 
         car.updatePosition(event)
-
         carVertices = car.getCarVertices()
 
-        collision = collisionClass.doIntersect(carVertices[0], carVertices[3], p1, p2)
+        collision = collisionClass.doPolygonIntersect(carVertices, circuit)
 
         car.showCar(screen, collision)
 
