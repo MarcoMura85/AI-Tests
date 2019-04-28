@@ -2,6 +2,7 @@ import pygame
 import rectClass
 import math
 
+
 class Car:
 
     def __init__(self, x, y, image, surface):
@@ -11,6 +12,7 @@ class Car:
         self.angleStep = 0.15
         self.brakeStep = 0.15
         self.accStep = 1
+        self.scaleFactor = 0.5
 
         self.x = x
         self.y = y
@@ -18,19 +20,19 @@ class Car:
         self.vel = [0, 0]
         self.acc = 0
         self.image = pygame.image.load(image)
+        self.surface = surface
 
-        self.size = self.image.get_rect().size
         self.rect = self.image.get_rect()
+        self.size = self.rect.size
 
-        self.myRect22 = rectClass.myRect(surface, self.rect, self.angle)
+        self.myRect = rectClass.MyRect(self.surface, self.rect, self.angle)
 
         self.forward = False
         self.backward = False
         self.rotatePos = False
         self.rotateNeg = False
         self.brake = False
-        self.surface = surface
-        self.scaleCar(0.5)
+        self.scaleCar(self.scaleFactor)
 
     def scaleCar(self, ratio):
         width = round (self.size[0] * ratio)
@@ -38,25 +40,23 @@ class Car:
         self.image = pygame.transform.scale(self.image, (width, height))
         self.size = self.image.get_rect().size
         self.rect = self.image.get_rect()
-        self.myRect22.updateRect(self.rect)
+        self.myRect.updateRect(self.rect)
 
     def setPos (self, x, y, angle):
         self.x = x
         self.y = y
         self.angle = angle
-        self.myRect22.updatePos(x, y, angle)
+        self.rect = self.image.get_rect(center=(self.x, self.y))
+        self.myRect.updatePos(x, y, angle)
 
-    def showCar(self, surface):
+    def showCar(self, surface, collision=False):
         self.move()
-
         degrees = math.degrees(self.angle)
+
         rot_img = pygame.transform.rotate(self.image, -degrees)
         self.rect = rot_img.get_rect(center=(self.x, self.y))
         surface.blit(rot_img, self.rect)
-        self.myRect22.drawMyRect()
-        #pygame.draw.rect(self.surface, (255, 0, 0),self.rect,2)
-
-        #print(self.rect)
+        self.myRect.drawMyRect()
 
     def updatePosition(self, event):
 
@@ -89,10 +89,12 @@ class Car:
             self.angle -= self.angleStep
         if self.rotateNeg:
             self.angle += self.angleStep
+
         if self.forward:
             self.acc += self.accStep
         if self.backward:
             self.acc -= self.accStep
+
         if self.brake and self.acc != 0:
             if self.acc > self.zeroAcc:
                 self.acc -= self.brakeStep
@@ -106,11 +108,13 @@ class Car:
         if self.acc > self.maxAcc:
             self.acc = self.maxAcc
 
-        self.showCar(self.surface)
-
     def move(self):
         self.vel[0] = self.acc * math.sin(self.angle)
         self.vel[1] = self.acc * (math.cos(self.angle))
         self.x += self.vel[0]
         self.y -= self.vel[1]
-        self.myRect22.updatePos(self.x, self.y, self.angle)
+        self.myRect.updatePos(self.x, self.y, self.angle)
+
+
+    def getCarVertices(self):
+        return self.myRect.vertices

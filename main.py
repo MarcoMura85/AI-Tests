@@ -1,5 +1,6 @@
 import pygame
 import carClass
+import collisionClass
 
 # initialize the pygame module
 pygame.init()
@@ -10,10 +11,11 @@ screen_width = 800
 screen_height = 600
 screen = pygame.display.set_mode((screen_width, screen_height))
 
+
 # a clock for controlling the fps later
 clock = pygame.time.Clock()
 
-car = carClass.Car(100,100,"car.png", screen)
+car = carClass.Car(100, 100, "car.png", screen)
 car.showCar(screen)
 
 def game_loop():
@@ -36,8 +38,21 @@ def game_loop():
                 running = False
 
         screen.fill((128, 128, 128))
+
+        p1 = (200, 200)
+        p2 = (300, 500)
+        pygame.draw.line(screen, (255, 0, 0), p1, p2)
+
+
         car.updatePosition(event)
-        car.showCar(screen)
+
+        carVertices = car.getCarVertices()
+
+        collision = collisionClass.intersect(carVertices[0],carVertices[3], p1, p2)
+
+        print (collision)
+
+        car.showCar(screen, collision)
 
         pygame.display.update()
         clock.tick(60)
