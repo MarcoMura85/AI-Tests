@@ -1,12 +1,13 @@
 
+
 # Given three colinear points p, q, r, the function checks if
 # point q lies on line segment 'pr'
-def onSegment( p,  q,  r):
-	if (q[0] <= max(p[0], r[0]) and q[0] >= min(p[0], r[0]) and
-		q[1] <= max(p[1], r[1]) and q[1] >= min(p[1], r[1])) :
+def onSegment (p, q, r):
+	if min(p[0], r[0]) <= q[0] <= max(p[0], r[0]) and min(p[1], r[1]) <= q[1] <= max(p[1], r[1]):
 		return True
 
 	return False
+
 
 # To find orientation of ordered triplet (p, q, r).
 # The function returns following values
@@ -24,6 +25,7 @@ def orientation(p, q, r):
 	if val > 0: return 1 #clockwise
 
 	return 2 #counterclocl wise
+
 
 # The main function that returns True if line segment 'p1q1'
 # and 'p2q2' intersect.
@@ -52,6 +54,6 @@ def doIntersect(p1, q1, p2, q2):
 	# p2, q2 and q1 are colinear and q1 lies on segment p2q2
 	if o4 == 0 and onSegment(p2, q1, q2): return True
 
-	return False # Doesn't fall in any of the above cases
+	return False  # Doesn't fall in any of the above cases
 
 
