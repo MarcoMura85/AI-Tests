@@ -30,7 +30,7 @@ def draw_circuit( point_list, event):
 def game_loop():
     xpos = screen_width/2
     ypos = screen_height/2
-    car.setPos(xpos, ypos, 0)
+    car.setPos(xpos-345, ypos, 0)
 
     # update the screen to make the changes visible (fullscreen update)
     pygame.display.flip()
