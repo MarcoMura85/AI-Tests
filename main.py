@@ -54,9 +54,9 @@ def game_loop():
             # only do something if the event is of type QUIT
             if event.type == pygame.QUIT or (event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE):
                 running = False
-            # if event.type == pygame.KEYDOWN and event.key == pygame.K_s:
-            #     with open("outerCircuit.txt", "w") as f:
-            #         f.write('\n'.join('%s , %s' % x for x in point_list))
+            #if event.type == pygame.KEYDOWN and event.key == pygame.K_s:
+            #    with open("innerCircuit.txt", "w") as f:
+            #        f.write('\n'.join('%s , %s' % x for x in point_list))
 
 
         screen.fill((128, 128, 128))
@@ -72,7 +72,7 @@ def game_loop():
         car.updatePosition(event)
         carVertices = car.getCarVertices()
 
-        collision = collisionClass.doPolygonIntersect(carVertices, circuit)
+        collision = collisionClass.doPolygonIntersect(carVertices, inner) or collisionClass.doPolygonIntersect(carVertices, outer)
 
         car.showCar(screen, collision)
 
