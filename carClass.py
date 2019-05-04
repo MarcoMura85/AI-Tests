@@ -1,5 +1,6 @@
 import pygame
 import rectClass
+import distanceSensors
 import math
 
 
@@ -26,6 +27,7 @@ class Car:
         self.size = self.rect.size
 
         self.myRect = rectClass.MyRect(self.surface, self.rect, self.angle)
+        self.sensors = distanceSensors.MySensors(self.surface, self.rect, self.angle)
 
         self.forward = False
         self.backward = False
@@ -41,6 +43,7 @@ class Car:
         self.size = self.image.get_rect().size
         self.rect = self.image.get_rect()
         self.myRect.updateRect(self.rect)
+        self.sensors.updateRect(self.rect)
 
     def setPos (self, x, y, angle):
         self.x = x
@@ -48,6 +51,7 @@ class Car:
         self.angle = angle
         self.rect = self.image.get_rect(center=(self.x, self.y))
         self.myRect.updatePos(x, y, angle)
+        self.sensors.updatePos(x, y, angle)
 
     def showCar(self, surface, collision=False):
         self.move()
@@ -57,6 +61,7 @@ class Car:
         self.rect = rot_img.get_rect(center=(self.x, self.y))
         surface.blit(rot_img, self.rect)
         self.myRect.drawMyRect(collision)
+        self.sensors.drawSensors()
 
     def updatePosition(self, event):
 
@@ -114,6 +119,7 @@ class Car:
         self.x += self.vel[0]
         self.y -= self.vel[1]
         self.myRect.updatePos(self.x, self.y, self.angle)
+        self.sensors.updatePos(self.x, self.y, self.angle)
 
 
     def getCarVertices(self):

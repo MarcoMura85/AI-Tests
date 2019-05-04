@@ -75,6 +75,8 @@ def game_loop():
         collision = collisionClass.doPolygonIntersect(carVertices, inner) or collisionClass.doPolygonIntersect(carVertices, outer)
 
         car.showCar(screen, collision)
+        car.sensors.drawInterceptionPoint(inner)
+        car.sensors.drawInterceptionPoint(outer)
 
         pygame.display.update()
         clock.tick(60)

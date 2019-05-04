@@ -1,7 +1,5 @@
 import pygame
-import numpy
 import math
-
 
 class MyRect(pygame.Surface):
 
