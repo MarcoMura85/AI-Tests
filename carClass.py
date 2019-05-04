@@ -53,15 +53,14 @@ class Car:
         self.myRect.updatePos(x, y, angle)
         self.sensors.updatePos(x, y, angle)
 
-    def showCar(self, surface, collision=False):
-        self.move()
+    def showCar(self, surface):
+
         degrees = math.degrees(self.angle)
 
         rot_img = pygame.transform.rotate(self.image, -degrees)
         self.rect = rot_img.get_rect(center=(self.x, self.y))
         surface.blit(rot_img, self.rect)
-        self.myRect.drawMyRect(collision)
-        self.sensors.drawSensors()
+
 
     def updatePosition(self, event):
 

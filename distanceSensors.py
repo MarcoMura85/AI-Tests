@@ -12,14 +12,16 @@ class MySensors():
         self.angle = angle
         self.surface = surface
 
-        self.sFront = (self.center[0], self.center[1]-self.width)
-        self.sFrontLeft = self.rotatePoint(self.center, self.sFront, self.angle+math.radians(45))
-        self.sFrontRight = (self.center[0], self.center[1])
-        self.sRight = (self.center[0], self.center[1])
-        self.sLeft = (self.center[0], self.center[1])
-        self.sBack = (self.center[0], self.center[1])
-        self.sBackRight = (self.center[0], self.center[1])
-        self.sBackLeft = (self.center[0], self.center[1])
+        self.sFront = (0,0)
+        self.sFrontLeft = (0,0)
+        self.sFrontRight = (0,0)
+        self.sRight = (0,0)
+        self.sLeft = (0,0)
+        self.sBack = (0,0)
+        self.sBackRight = (0,0)
+        self.sBackLeft = (0,0)
+
+        self.updatePos(self.center[0], self.center[1], self.angle)
 
     def rotatePoint(self, origin, point, angle):
         ox, oy = origin
@@ -55,31 +57,33 @@ class MySensors():
 
     def drawSensors(self):
         color = (255, 255, 255)
-        pygame.draw.line(self.surface, color, self.center, self.sFront)
-        pygame.draw.line(self.surface, color, self.center, self.sBack)
-        pygame.draw.line(self.surface, color, self.center, self.sRight)
-        pygame.draw.line(self.surface, color, self.center, self.sLeft)
-        pygame.draw.line(self.surface, color, self.center, self.sFrontLeft)
-        pygame.draw.line(self.surface, color, self.center, self.sFrontRight)
-        pygame.draw.line(self.surface, color, self.center, self.sBackRight)
-        pygame.draw.line(self.surface, color, self.center, self.sBackLeft)
 
+        sensors = [self.sFront, self.sFrontLeft, self.sFrontRight,
+                        self.sRight, self.sLeft, self.sBack, self.sBackRight, self.sBackLeft]
+
+        for i in range(len(sensors)):
+            pygame.draw.line(self.surface, color, self.center, sensors[i])
 
 
     def drawInterceptionPoint(self, lines):
-        pf = lines_interceptions([self.center, self.sFront], lines)
-        pb = lines_interceptions([self.center, self.sBack], lines)
-        pl = lines_interceptions([self.center, self.sLeft], lines)
-        pr = lines_interceptions([self.center, self.sRight], lines)
 
-        points = pb+pf+pl+pr
+        sensors = [self.sFront, self.sFrontLeft, self.sFrontRight,
+                        self.sRight, self.sLeft, self.sBack, self.sBackRight, self.sBackLeft]
+
+        points = []
+
+        for i in range(len(sensors)):
+            pp = lines_interseptions([self.center, sensors[i]], lines)
+            if len(pp) > 0:
+                points += pp
+
         for i in range(len(points)):
             pygame.draw.circle(self.surface, (0, 0, 255), points[i], 5)
 
-def line_intersection(line1, line2):
+def segment_intersection(line1, line2):
 
     if not collisionClass.doSegmentIntersect(line1[0],line1[1], line2[0],line2[1]):
-        raise Exception('lines do not intersect')
+        raise Exception('segment do not intersect')
 
     xdiff = (line1[0][0] - line1[1][0], line2[0][0] - line2[1][0])
     ydiff = (line1[0][1] - line1[1][1], line2[0][1] - line2[1][1])
@@ -89,7 +93,7 @@ def line_intersection(line1, line2):
 
     div = det(xdiff, ydiff)
     if div == 0:
-        raise Exception('lines do not intersect')
+        raise Exception('segment do not intersect')
 
     d = (det(*line1), det(*line2))
     x = det(d, xdiff) / div
@@ -97,7 +101,7 @@ def line_intersection(line1, line2):
 
     return round(x), round(y)
 
-def lines_interceptions (listPoint1, listPoint2):
+def lines_interseptions (listPoint1, listPoint2):
     interceptions = []
     for i in range(len(listPoint1)):
         if i == (len(listPoint1) - 1):
@@ -111,7 +115,7 @@ def lines_interceptions (listPoint1, listPoint2):
             else:
                 line2 = (listPoint2[j], listPoint2[j + 1])
             try:
-                interception = line_intersection(line1, line2)
+                interception = segment_intersection(line1, line2)
                 interceptions.append(interception)
             except:
                 continue
