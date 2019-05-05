@@ -1,6 +1,7 @@
 import pygame
 import math
 import collisionClass
+import sys
 
 class MySensors():
 
@@ -21,6 +22,15 @@ class MySensors():
         self.sBackRight = (0,0)
         self.sBackLeft = (0,0)
 
+        self.sFrontDis = float('inf')
+        self.sFrontLeftDis = float('inf')
+        self.sFrontRightDis = float('inf')
+        self.sRightDis = float('inf')
+        self.sLeftDis = float('inf')
+        self.sBackDis = float('inf')
+        self.sBackRightDis = float('inf')
+        self.sBackLeftDis = float('inf')
+
         self.updatePos(self.center[0], self.center[1], self.angle)
 
     def rotatePoint(self, origin, point, angle):
@@ -39,11 +49,12 @@ class MySensors():
     def updatePos(self, xpos, ypos, angle):
         self.center = (xpos, ypos)
         self.angle = angle
+        scale = 3.5
 
-        self.sFront = (self.center[0], self.center[1] - (self.height*1.8))
-        self.sRight = (self.center[0] + (self.height*1.8), self.center[1])
-        self.sLeft = (self.center[0] - (self.height*1.8), self.center[1])
-        self.sBack = (self.center[0], self.center[1] + (self.height*1.8))
+        self.sFront = (self.center[0], self.center[1] - (self.height*scale))
+        self.sRight = (self.center[0] + (self.height*scale), self.center[1])
+        self.sLeft = (self.center[0] - (self.height*scale), self.center[1])
+        self.sBack = (self.center[0], self.center[1] + (self.height*scale))
 
         self.sFront = self.rotatePoint((xpos, ypos), self.sFront, self.angle)
         self.sBack = self.rotatePoint((xpos, ypos), self.sBack, self.angle)
@@ -53,6 +64,54 @@ class MySensors():
         self.sFrontRight = self.rotatePoint(self.center, self.sFront, math.radians(-45))
         self.sBackRight = self.rotatePoint(self.center, self.sBack, math.radians(-45))
         self.sBackLeft = self.rotatePoint(self.center, self.sBack, math.radians(45))
+
+    def updateSensorsDistances(self, sensorsDist):
+
+        self.sFrontDis = sensorsDist[0]
+        self.sFrontLeftDis = sensorsDist[1]
+        self.sFrontRightDis = sensorsDist[2]
+        self.sRightDis = sensorsDist[3]
+        self.sLeftDis = sensorsDist[4]
+        self.sBackDis = sensorsDist[5]
+        self.sBackRightDis = sensorsDist[6]
+        self.sBackLeftDis = sensorsDist[7]
+
+
+    def calcInterseptions(self, lines):
+        sensors = [self.sFront, self.sFrontLeft, self.sFrontRight,
+                   self.sRight, self.sLeft, self.sBack, self.sBackRight, self.sBackLeft]
+
+        sensorsDistances = [self.sFrontDis, self.sFrontLeftDis, self.sFrontRightDis,
+                   self.sRightDis, self.sLeftDis, self.sBackDis, self.sBackRightDis, self.sBackLeftDis]
+
+        points = []
+        distances = []
+
+        for i in range(len(sensors)):
+            dis = sys.maxsize
+            tt = float('inf')
+            pp = lines_interseptions([self.center, sensors[i]], lines)
+            if len(pp) > 0:
+                for i in range(len(pp)):
+                    tt = distance(self.center, pp[i])
+                    if tt < dis:
+                        nearIntersect = pp[i]
+                        dis = tt
+
+                points.append(nearIntersect)
+
+            distances.append(tt)
+
+        for i in range(len(sensorsDistances)):
+            if distances[i]<sensorsDistances[i]:
+                sensorsDistances[i] = distances[i]
+
+        self.updateSensorsDistances(sensorsDistances)
+
+        print(sensorsDistances)
+
+        return points, distances
+
 
 
     def drawSensors(self):
@@ -65,18 +124,7 @@ class MySensors():
             pygame.draw.line(self.surface, color, self.center, sensors[i])
 
 
-    def drawInterceptionPoint(self, lines):
-
-        sensors = [self.sFront, self.sFrontLeft, self.sFrontRight,
-                        self.sRight, self.sLeft, self.sBack, self.sBackRight, self.sBackLeft]
-
-        points = []
-
-        for i in range(len(sensors)):
-            pp = lines_interseptions([self.center, sensors[i]], lines)
-            if len(pp) > 0:
-                points += pp
-
+    def drawInterceptionPoint(self, points):
         for i in range(len(points)):
             pygame.draw.circle(self.surface, (0, 0, 255), points[i], 5)
 
@@ -116,11 +164,13 @@ def lines_interseptions (listPoint1, listPoint2):
                 line2 = (listPoint2[j], listPoint2[j + 1])
             try:
                 interception = segment_intersection(line1, line2)
-                interceptions.append(interception)
+                if not interception in interceptions :
+                    interceptions.append(interception)
             except:
                 continue
 
     return interceptions
 
 
-
+def distance(p0, p1):
+    return math.sqrt((p0[0] - p1[0])**2 + (p0[1] - p1[1])**2)
