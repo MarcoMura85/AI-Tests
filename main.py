@@ -79,9 +79,8 @@ def game_loop():
         #car.myRect.drawMyRect(collision)
         car.sensors.drawSensors()
 
-        points1, distances = car.sensors.calcInterseptions(inner)
-        points2, distances = car.sensors.calcInterseptions(outer)
-        car.sensors.drawInterceptionPoint(points1+points2)
+        points, dist = car.sensors.calcInterseptionCircuit(inner, outer)
+        car.sensors.drawInterceptionPoint(points)
         #car.sensors.drawInterceptionPoint(outer)
 
         car.showCar(screen)

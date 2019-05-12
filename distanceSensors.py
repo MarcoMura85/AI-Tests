@@ -49,7 +49,7 @@ class MySensors():
     def updatePos(self, xpos, ypos, angle):
         self.center = (xpos, ypos)
         self.angle = angle
-        scale = 3.5
+        scale = 7.5
 
         self.sFront = (self.center[0], self.center[1] - (self.height*scale))
         self.sRight = (self.center[0] + (self.height*scale), self.center[1])
@@ -81,9 +81,6 @@ class MySensors():
         sensors = [self.sFront, self.sFrontLeft, self.sFrontRight,
                    self.sRight, self.sLeft, self.sBack, self.sBackRight, self.sBackLeft]
 
-        sensorsDistances = [self.sFrontDis, self.sFrontLeftDis, self.sFrontRightDis,
-                   self.sRightDis, self.sLeftDis, self.sBackDis, self.sBackRightDis, self.sBackLeftDis]
-
         points = []
         distances = []
 
@@ -102,17 +99,27 @@ class MySensors():
 
             distances.append(tt)
 
+        return points, distances
+
+    def calcInterseptionCircuit(self, inner, outer):
+        pointIn, distIn = self.calcInterseptions(inner)
+        pointOut, distOut = self.calcInterseptions(outer)
+
+        sensorsDistances = [self.sFrontDis, self.sFrontLeftDis, self.sFrontRightDis,
+                            self.sRightDis, self.sLeftDis, self.sBackDis, self.sBackRightDis, self.sBackLeftDis]
+        distances = []
+
         for i in range(len(sensorsDistances)):
-            if distances[i]<sensorsDistances[i]:
-                sensorsDistances[i] = distances[i]
+            if distIn[i] < distOut[i]:
+                sensorsDistances[i] = distIn[i]
+                continue
+            sensorsDistances[i] = distOut[i]
 
         self.updateSensorsDistances(sensorsDistances)
 
-        print(sensorsDistances)
+        #print(sensorsDistances)
 
-        return points, distances
-
-
+        return pointIn+pointOut, distIn
 
     def drawSensors(self):
         color = (255, 255, 255)
