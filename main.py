@@ -1,6 +1,8 @@
 import pygame
 import carClass
 import collisionClass
+import distanceSensors
+import rewardGates
 
 # initialize the pygame module
 pygame.init()
@@ -17,7 +19,7 @@ clock = pygame.time.Clock()
 
 car = carClass.Car(100, 100, "car.png", screen)
 car.showCar(screen)
-point_list=[]
+point_list = []
 outer = []
 inner = []
 
@@ -47,6 +49,21 @@ def game_loop():
 
     circuit = inner + outer
 
+    # gatesDict = {}
+    # for pointOut in range(len(outer)):
+    #     distPrev = float('inf')
+    #     for pointIn in range(len(inner)):
+    #         dist = distanceSensors.distance(inner[pointIn], outer[pointOut])
+    #         if dist < distPrev:
+    #             distPrev = dist
+    #             gatesDict[pointOut] = pointIn
+    #
+    # d2 = {v: k for k, v in gatesDict.items()}  # exchange keys, values
+    # gatesDict = {v: k for k, v in d2.items()}
+
+    circuitGates = rewardGates.RewardGates(13, car.rect, screen)
+    circuitGates.loadRewardGates(inner, outer)
+
     # main loop
     while running:
         # event handling, gets all event from the event queue
@@ -58,8 +75,6 @@ def game_loop():
             #    with open("innerCircuit.txt", "w") as f:
             #        f.write('\n'.join('%s , %s' % x for x in point_list))
 
-
-
         screen.fill((128, 128, 128))
 
         pygame.draw.polygon(screen, (200, 200, 200), outer, 0)
@@ -70,18 +85,20 @@ def game_loop():
         #if len(point_list) > 1:
             #pygame.draw.lines(screen, (255, 0, 0), False, point_list, 1)
 
-        car.updatePositionOnKeyboardEvent(event)
-
-        #car.updatePositionByAgent();
+        #car.updatePositionOnKeyboardEvent(event)
+        car.updatePositionByAgent();
 
         carVertices = car.getCarVertices()
 
         collision = collisionClass.doPolygonIntersect(carVertices, inner) or collisionClass.doPolygonIntersect(carVertices, outer)
+        circuitGates.checkGatePass(carVertices)
+
 
         car.move()
 
         #car.myRect.drawMyRect(collision)
-        car.sensors.drawSensors()
+        #car.sensors.drawSensors()
+        circuitGates.drawGates(True)
 
         points, dist = car.sensors.calcInterseptionCircuit(inner, outer)
         car.sensors.drawInterceptionPoint(points)
@@ -92,10 +109,10 @@ def game_loop():
         pygame.display.update()
         clock.tick(60)
 
-        # if collision:
-        #     car.myRect.drawMyRect(collision)
-        #     pygame.display.update()
-        #     running = False
+        if collision:
+            car.myRect.drawMyRect(collision)
+            pygame.display.update()
+            running = False
 
 game_loop()
 pygame.quit()
