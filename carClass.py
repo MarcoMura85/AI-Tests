@@ -2,6 +2,7 @@ import pygame
 import rectClass
 import distanceSensors
 import math
+import random
 
 
 class Car:
@@ -62,8 +63,8 @@ class Car:
         surface.blit(rot_img, self.rect)
 
 
-    def updatePosition(self, event):
 
+    def updatePositionOnKeyboardEvent(self, event):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
                 self.rotatePos = True
@@ -88,7 +89,34 @@ class Car:
             if event.key == pygame.K_SPACE:
                 self.brake = False
 
-        # update the position of the car
+        self.updatePosition();
+
+    def updatePositionByAgent(self):
+
+        action = random.randint(0,5)
+
+        self.rotatePos = False
+        self.rotateNeg = False
+        self.forward = False
+        self.backward = False
+        self.brake = False
+
+        if 0<=action<1:
+            self.rotatePos = True
+        if 1<=action<2:
+            self.rotateNeg = True
+        if 2<=action<3:
+            self.forward = True
+        if 3<=action<4:
+            self.backward = True
+        if 4<=action<5:
+            self.brake = True
+
+        self.updatePosition();
+
+
+    def updatePosition(self):
+
         if self.rotatePos:
             self.angle -= self.angleStep
         if self.rotateNeg:

@@ -59,6 +59,7 @@ def game_loop():
             #        f.write('\n'.join('%s , %s' % x for x in point_list))
 
 
+
         screen.fill((128, 128, 128))
 
         pygame.draw.polygon(screen, (200, 200, 200), outer, 0)
@@ -69,7 +70,10 @@ def game_loop():
         #if len(point_list) > 1:
             #pygame.draw.lines(screen, (255, 0, 0), False, point_list, 1)
 
-        car.updatePosition(event)
+        car.updatePositionOnKeyboardEvent(event)
+
+        #car.updatePositionByAgent();
+
         carVertices = car.getCarVertices()
 
         collision = collisionClass.doPolygonIntersect(carVertices, inner) or collisionClass.doPolygonIntersect(carVertices, outer)
@@ -87,6 +91,11 @@ def game_loop():
 
         pygame.display.update()
         clock.tick(60)
+
+        # if collision:
+        #     car.myRect.drawMyRect(collision)
+        #     pygame.display.update()
+        #     running = False
 
 game_loop()
 pygame.quit()
